@@ -1,0 +1,78 @@
+import {useState} from 'react';
+import { NavLink } from 'react-router-dom';
+import {
+  Settings,
+  CirclePlus,
+  GalleryVerticalEnd
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider
+} from "@/components/ui/tooltip";
+
+function Sidenav() {
+
+  return (
+    <aside className="fixed justify-between top-14 w-14 h-auto inset-y-0 left-0 z-0 flex-col border-r bg-background flex">
+      <nav className="flex flex-col items-center gap-4 px-2 py-5">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) => {
+                  return isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground';
+                }}
+              >
+                <GalleryVerticalEnd className="h-5 w-5" />
+                <span className="sr-only">All Lists</span>
+              </NavLink>
+            </TooltipTrigger>
+            <TooltipContent side="right">All Lists</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavLink
+                to="/create-a-new-list"
+                end
+                className={({ isActive }) => {
+                  return isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground';
+                }}
+              >
+                <CirclePlus className="h-5 w-5" />
+                <span className="sr-only">Create List</span>
+              </NavLink>
+            </TooltipTrigger>
+            <TooltipContent side="right">Create List</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </nav>
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">Settings</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Settings</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </nav>
+    </aside>
+  )
+}
+
+export default Sidenav;
+
+
+
