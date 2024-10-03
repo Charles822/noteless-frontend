@@ -95,7 +95,7 @@ function NoteForm({ listId, onNoteCreated }: Props) {
       if (process.env.NODE_ENV === 'development') {
         console.error('Error creating note:', err.message);
       }
-      toast({ variant: "destructive", description: err.message });
+      toast({ variant: "destructive", description: "You must be the list owner to create a note, if you are, please refresh." }); // write custom message later
       reset();
     }
   };
