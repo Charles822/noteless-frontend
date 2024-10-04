@@ -59,7 +59,7 @@ const ListDetails = () => {
         </div>
       </div>
       <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-4 xl:grid-cols-4">
-        <NoteForm onNoteCreated={handleNoteCreated} listId={data.id} className="col-span-1" />
+        <NoteForm className="position-fix" onNoteCreated={handleNoteCreated} listId={data.id} className="col-span-1" />
         <NotePreviewList listSlug={data.slug} isCreated={isCreated} reset={() => setIsCreated(false)}/>
       </div>
     </>
