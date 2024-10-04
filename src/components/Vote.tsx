@@ -7,11 +7,10 @@ import useVotes from '../hooks/useVotes'
 interface Props {
 	noteId: number;
 	userId: number;
-	voteId: number;
 
 }
 
-const Vote = ({ noteId, userId, voteId }: Props) => {
+const Vote = ({ noteId, userId }: Props) => {
 	const [voteStatus, setVoteStatus] = useState<number | null>(null);
 	const { execute, data, error } = useVotes(noteId, userId); // Fetch votes data
 	const { execute: execute_patch } = useVotes(undefined, undefined, 'patch'); // update a vote

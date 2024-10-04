@@ -44,12 +44,12 @@ function ListForm() {
 
   const { control, handleSubmit, formState, reset } = form;
 
-  const { errors, isSubmitting, isDirty, isValid } = formState;
+  const { isSubmitting, isDirty, isValid } = formState;
 
   const { toast } = useToast();
 
   // Call useLists at the top level
-  const { execute, data, error, isLoading } = useLists(undefined, 'post');
+  const { execute, error } = useLists(undefined, 'post');
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {

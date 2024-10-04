@@ -1,6 +1,5 @@
-import React, {useContext, useState} from 'react';
-import { Link, Navigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
+import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -19,14 +18,12 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import useUsers from '../hooks/useUsers';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Header from '../components/Header'
 import Logo from '../components/Logo';
 
 const registerUserSchema = z.object({
@@ -126,11 +123,11 @@ export default function SignUpPage() {
 
   const { control, handleSubmit, formState, reset } = form;
   const [redirect, setRedirect] = useState(false);
-  const { errors, isSubmitting, isDirty, isValid } = formState;
+  const { isSubmitting, isDirty, isValid } = formState;
   const { toast } = useToast();
 
-  // Call useLists at the top level
-  const { execute, data, error, isLoading } = useUsers('post');
+  // Call useUsers at the top level
+  const { execute, error } = useUsers('post');
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
@@ -233,7 +230,7 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />  
-              <Button type="Create Account" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
+              <Button disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
               <Toaster />
             </form>
           </Form>

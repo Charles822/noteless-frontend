@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import { useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Header from '../components/Header';
 import Logo from '../components/Logo';
 
 export function LoginPage() {
