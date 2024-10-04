@@ -1,7 +1,6 @@
 import { ReactNode, useState, useCallback, useEffect } from "react"
 import {ArrowBigUp, ArrowBigDown}from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
 import useVotes from '../hooks/useVotes'
 
 interface Props {

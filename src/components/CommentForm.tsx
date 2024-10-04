@@ -2,13 +2,10 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
@@ -41,11 +38,11 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   });
 
   const { control, handleSubmit, formState, reset } = form;
-  const { errors, isSubmitting, isDirty, isValid } = formState;
+  const { isSubmitting, isDirty, isValid } = formState;
   const { toast } = useToast();
 
   // Call useLists at the top level, cannot directly use it inside onSubmit
-  const { execute, data, error, isLoading } = useComments(undefined, undefined, undefined, 'post', undefined);
+  const { execute, data, error } = useComments(undefined, undefined, undefined, 'post', undefined);
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {

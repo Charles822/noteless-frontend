@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import axios, { CanceledError, AxiosRequestConfig, AxiosError } from "axios";
+import { useState } from "react";
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { axiosInstance } from '../services/api-client';
 
 const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
