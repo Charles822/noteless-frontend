@@ -1,6 +1,7 @@
 import useData from "./useData.ts";
 
 export interface User {
+	id: number;
 	username: string;
 }
 

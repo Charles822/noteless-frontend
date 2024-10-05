@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import  { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import {
   Card,
   CardContent,
@@ -18,16 +18,18 @@ import CommentsPreview from './CommentsPreview';
 import CommentsList from './CommentsList';
 import CommentForm from './CommentForm';
 
-
+// Tells typescript that my payload include a user_id property 
+interface MyJwtPayload extends JwtPayload {
+  user_id: number; 
+}
 
 const NoteDetailsCard = () => {
-  const params = useParams<{noteSlug: number}>();
+  const params = useParams<{noteSlug: string}>();
   const { execute, data: note, error, isLoading } = useNotes(undefined, params.noteSlug);
   const [isSubmitted, setStatus] = useState(false);
   const token = localStorage.getItem('authTokens');
-  const userId = token ? jwtDecode(token).user_id : null;
+  const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
   const [isDeleted, setUpdateCount] = useState(false);
-  console.log(note);
 
   useEffect(() => {
     execute(); // Trigger fetching the note

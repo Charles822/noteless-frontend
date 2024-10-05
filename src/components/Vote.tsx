@@ -4,8 +4,8 @@ import { useToast } from "@/components/ui/use-toast"
 import useVotes from '../hooks/useVotes'
 
 interface Props {
-	noteId: number;
-	userId: number;
+	noteId: number ;
+	userId: number | null;
 
 }
 

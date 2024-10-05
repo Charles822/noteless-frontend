@@ -1,4 +1,4 @@
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,7 +20,7 @@ import { z } from "zod";
 
 // Tells typescript that my payload include a user_id property 
 interface MyJwtPayload extends JwtPayload {
-	user_id: string; // or the appropriate type
+	user_id: number;
 }
 
 

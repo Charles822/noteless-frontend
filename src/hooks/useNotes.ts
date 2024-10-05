@@ -26,10 +26,11 @@ export interface Note {
 	comments_count: number;
 	votes_count: number;
 	created_at: string;
+	meta_description: string;
 	slug: string;
 }
 
-const useNotes = (slug?: number, noteSlug?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
+const useNotes = (slug?: string, noteSlug?: string, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
 	const endpoint = method === 'post'
 	? `/notes/notes/add_note/`
 	: noteSlug 

@@ -1,3 +1,4 @@
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -9,7 +10,6 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
-import  { jwtDecode } from 'jwt-decode'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -28,6 +28,11 @@ interface Props {
 	isSubmitted: (status: boolean) => void;
 }
 
+// Tells typescript that my payload include a user_id property 
+interface MyJwtPayload extends JwtPayload {
+  user_id: number; 
+}
+
 function CommentForm({ noteId, isSubmitted }: Props) {
   // 1. Define your form.
   const form = useForm<FormData>({
@@ -42,18 +47,18 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   const { toast } = useToast();
 
   // Call useLists at the top level, cannot directly use it inside onSubmit
-  const { execute, data, error } = useComments(undefined, undefined, undefined, 'post', undefined);
+  const { execute, error } = useComments(undefined, undefined, undefined, 'post', undefined);
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
     const token = localStorage.getItem('authTokens');
     
     if (!token) {
-      toast({ variant: "", description: "Please log in to comment." });
+      toast({ variant: "default", description: "Please log in to comment." });
       return;
     }
 
-    const userId = token ? jwtDecode(token).user_id : null;
+    const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
     const comment_data = {
       note: noteId, 
       text: values.text, 
@@ -79,9 +84,9 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   	<>
 	  	<div className=''>
 		    <Form {...form} >
-		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+		      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 		        <FormField
-		          control={form.control}
+		          control={control}
 		          name="text"
 		          render={({ field }) => (
 		            <FormItem>

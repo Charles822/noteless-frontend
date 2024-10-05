@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react"
+import { ReactNode, useState, useCallback, useEffect } from "react"
 import { X }from "lucide-react"
-import  { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,7 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
 import { baseURL } from "../services/api-client";
-import useComments from "../hooks/useComments"; 
+import useComments from "../hooks/useComments";
+import { Comment } from "../hooks/useComments";
 
 interface Props {
   noteId: number;
@@ -23,13 +24,23 @@ interface Props {
 
 }
 
+// Tells typescript that my payload include a user_id property 
+interface MyJwtPayload extends JwtPayload {
+  user_id: number; 
+}
+
 const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDeletion }: Props) => { 
   const { execute, data, error, isLoading } = useComments(noteId, undefined, undefined, 'get', 'list');
+  const comments = data?.comments as Comment[];
   const token = localStorage.getItem('authTokens');
-  const userId = token ? jwtDecode(token).user_id : null;
+  const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
   const { toast } = useToast();
 
   const deleteComment = useCallback(async (commentId: number) => {
+    if (!token) {
+      return;
+    }
+    
     try {
       const response = await fetch(`${baseURL}/interactions/comments/${commentId}/`, {
         method: 'DELETE',
@@ -70,10 +81,10 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
   if (error) return <p>Error loading note: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data.comments || !Array.isArray(data.comments)) return <p className=' text-sm text-gray-700'>Be the first to comment on this note!</p>;
+  if (!comments || !Array.isArray(comments)) return <p className=' text-sm text-gray-700'>Be the first to comment on this note!</p>;
 
   // a delete button showed only to the comment owner
-  const showButton = (comment_owner, element) => {
+  const showButton = (comment_owner: number, element: ReactNode) => {
     if (comment_owner === userId)
       return element
   };
@@ -82,7 +93,7 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
     <>
       <div >
         <h3 className="text-lg font-bold mb-6">Comments for this Note</h3>
-        {data.comments && data.comments.map((comment) => 
+        {comments && comments.map((comment) => 
           <div key={comment.id} className="mb-1">
             <Separator className='mb-2 my-2'/>
             <Card>

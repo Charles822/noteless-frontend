@@ -2,12 +2,12 @@ import { useState } from "react";
 import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { axiosInstance } from '../services/api-client';
 
-const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
-  const [data, setData] = useState<T[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setLoading] = useState(false);
+const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[] = []) => {
+  const [data, setData] = useState<T | T[] | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
-  const execute = async (requestData) => {
+  const execute = async (requestData?: any) => {
     setLoading(true);
     try {
       const response = await axiosInstance({

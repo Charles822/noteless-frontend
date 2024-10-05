@@ -23,7 +23,7 @@ export interface List {
   meta_description: string;
 }
 
-const useLists = (slug?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { name: string; description: string; agent_role_description: string; owner: number }) => {
+const useLists = (slug?: string, method: 'get' | 'post' | 'patch' = 'get', requestData?: { name: string; description: string; agent_role_description: string; owner: number }) => {
   const endpoint = method === 'post'
     ? '/lists/lists/add_list/'
     : slug 

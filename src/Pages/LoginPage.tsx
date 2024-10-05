@@ -14,7 +14,14 @@ import { Label } from "@/components/ui/label";
 import Logo from '../components/Logo';
 
 export function LoginPage() {
-  const {loginUser, user} = useContext(AuthContext)
+  //check to ensure the context is not undefined before accessing its properties
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProvider");
+  }
+
+  const {loginUser, user} = authContext
   const [redirect, setRedirect] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

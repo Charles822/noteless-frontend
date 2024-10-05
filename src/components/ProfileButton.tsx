@@ -14,7 +14,13 @@ import {
 
 
 const ProfileButton = () => {
-  const { logoutUser } = useContext(AuthContext);
+  //check to ensure the context is not undefined before accessing its properties
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProvider");
+  };
+  
+  const { logoutUser } = authContext;
   const navigate = useNavigate();
 
   const handleClick = async () => {
