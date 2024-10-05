@@ -1,4 +1,4 @@
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +16,13 @@ import useLists from '../hooks/useLists';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+
+// Tells typescript that my payload include a user_id property 
+interface MyJwtPayload extends JwtPayload {
+	user_id: string; // or the appropriate type
+}
+
 
 const formSchema = z.object({
   name: z.string().min(5, {
@@ -56,11 +63,11 @@ function ListForm() {
   	const token = localStorage.getItem('authTokens');
   	
   	if (!token) {
-    	toast({ variant: "danger", description: "Please log in to create a list." });
+    	toast({ variant: "destructive", description: "Please log in to create a list." });
     	return;
   	}
 
-    const owner = jwtDecode(token).user_id;
+    const owner = (jwtDecode<MyJwtPayload>(token)).user_id;
     const list_data = {
       name: values.name, 
       description: values.description, 
@@ -87,9 +94,9 @@ function ListForm() {
 	  	<h1 className="my-2 px-6 text-2xl font-bold">Create a new List</h1>
 	  	<div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-2 xl:grid-cols-2">
 		    <Form {...form} >
-		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+		      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 		        <FormField
-		          control={form.control}
+		          control={control}
 		          name="name"
 		          render={({ field }) => (
 		            <FormItem>
@@ -105,7 +112,7 @@ function ListForm() {
 		          )}
 		        />
 		        <FormField
-		          control={form.control}
+		          control={control}
 		          name="description"
 		          render={({ field }) => (
 		            <FormItem>
@@ -121,7 +128,7 @@ function ListForm() {
 		          )}
 		        />
 		        <FormField
-		          control={form.control}
+		          control={control}
 		          name="agent_role"
 		          render={({ field }) => (
 		            <FormItem>

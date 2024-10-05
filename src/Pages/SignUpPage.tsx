@@ -42,9 +42,9 @@ const registerUserSchema = z.object({
 // Validate strong password format
 const refinedRegisterUserSchema = 
   registerUserSchema.superRefine(({ password }, checkPassComplexity) => {
-    const containsUppercase = (ch) => /[A-Z]/.test(ch);
-    const containsLowercase = (ch) => /[a-z]/.test(ch);
-    const containsSpecialChar = (ch) =>
+    const containsUppercase = (ch: string) => /[A-Z]/.test(ch);
+    const containsLowercase = (ch: string) => /[a-z]/.test(ch);
+    const containsSpecialChar = (ch: string) =>
       /[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~ ]/.test(ch);
     let countOfUpperCase = 0,
       countOfLowerCase = 0,
@@ -87,11 +87,17 @@ const refinedRegisterUserSchema =
       countOfUpperCase < 1 ||
       countOfSpecialChar < 1 ||
       countOfNumbers < 1
-    ) {
+    ) {   
+      // transform errObj into a string
+      const messages = Object.entries(errObj)
+        .filter(([_, value]) => !value.pass)
+        .map(([_, value]) => value.message)
+        .join(' '); 
+
       checkPassComplexity.addIssue({
         code: "custom",
         path: ["password"],
-        message: errObj,
+        message: messages,
       });
     }
   });
@@ -174,9 +180,9 @@ export default function SignUpPage() {
           </CardHeader>
           <CardContent>
             <Form {...form} >
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               <FormField
-                control={form.control}
+                control={control}
                 name="username"
                 render={({ field }) => (
                   <FormItem>
@@ -192,7 +198,7 @@ export default function SignUpPage() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -205,7 +211,7 @@ export default function SignUpPage() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -218,7 +224,7 @@ export default function SignUpPage() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={control}
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>

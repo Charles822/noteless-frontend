@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export function LoginPage() {
   const {loginUser, user} = useContext(AuthContext)
   const [redirect, setRedirect] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     await loginUser(e);
     if (user) {
       setRedirect(true);
@@ -54,7 +54,7 @@ export function LoginPage() {
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <Link href="#" className="ml-auto inline-block text-sm underline">
+                    <Link to="#" className="ml-auto inline-block text-sm underline">
                       Forgot your password?
                     </Link>
                   </div>
