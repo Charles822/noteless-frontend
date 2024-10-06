@@ -1,4 +1,4 @@
-import { ReactNode, useState, useCallback, useEffect } from "react"
+import { ReactNode, useCallback, useEffect } from "react"
 import { X }from "lucide-react"
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
 import { baseURL } from "../services/api-client";
 import useComments from "../hooks/useComments";
-import { Comment } from "../hooks/useComments";
+import { CommentsResponse } from "../hooks/useComments";
 
 interface Props {
   noteId: number;
@@ -31,7 +31,7 @@ interface MyJwtPayload extends JwtPayload {
 
 const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDeletion }: Props) => { 
   const { execute, data, error, isLoading } = useComments(noteId, undefined, undefined, 'get', 'list');
-  const comments = data?.comments as Comment[];
+  const comments = (data as CommentsResponse)?.comments ?? null; // ensures that comments is an empty array if data.comments is undefined or null
   const token = localStorage.getItem('authTokens');
   const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
   const { toast } = useToast();
@@ -40,7 +40,7 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
     if (!token) {
       return;
     }
-    
+
     try {
       const response = await fetch(`${baseURL}/interactions/comments/${commentId}/`, {
         method: 'DELETE',

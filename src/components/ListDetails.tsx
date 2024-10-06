@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet';
-import { Separator } from "@/components/ui/separator"
 import useLists from "../hooks/useLists"
 import NotePreviewList from  "./NotePreviewList"
 import NoteForm from './NoteForm'
 
 const ListDetails = () => {
   const params = useParams<{slug: string}>();
-  const [slug, setSlug] = useState(params.slug);
+  const slug = params.slug;
   const [isCreated, setIsCreated] = useState(false);
   const { execute, data, error, isLoading } = useLists(slug);
-  console.log(data);
 
   const handleNoteCreated = () => {
    setIsCreated(true); // to notify the NotepreviewList component;
@@ -51,7 +49,7 @@ const ListDetails = () => {
         </div>
       </div>
       <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-4 xl:grid-cols-4">
-        <NoteForm className="position-fix" onNoteCreated={handleNoteCreated} listId={data.id} className="col-span-1" />
+        <NoteForm className="position-fix col-span-1" onNoteCreated={handleNoteCreated} listId={data.id}/>
         <NotePreviewList listSlug={data.slug} isCreated={isCreated} reset={() => setIsCreated(false)}/>
       </div>
     </>

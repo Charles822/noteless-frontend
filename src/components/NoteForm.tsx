@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import  { jwtDecode } from 'jwt-decode'
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { LoaderCircle } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import {
@@ -26,14 +26,20 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
+// Tells typescript that my payload include a user_id property 
+interface MyJwtPayload extends JwtPayload {
+  user_id: number; 
+}
+
 interface Props {
+  className?: string; // need to add if for custom component
 	listId: number;
   onNoteCreated: () => void;
 }
 
-function NoteForm({ listId, onNoteCreated }: Props) {
-  const [delay, setDelay] = useState(5000);
-  const [taskIds, setTaskIds] = useState([]);
+function NoteForm({ className, listId, onNoteCreated }: Props) {
+  const [delay, setDelay] = useState<number | null>(5000);
+  const [taskIds, setTaskIds] = useState<string[]>([]);
 
   // 1. Define your form.
   const form = useForm<FormData>({
@@ -45,13 +51,13 @@ function NoteForm({ listId, onNoteCreated }: Props) {
 
   const { control, handleSubmit, formState, reset } = form;
 
-  const { errors, isSubmitting, isDirty, isValid } = formState;
+  const { isSubmitting, isDirty, isValid } = formState;
 
   const { toast } = useToast();
 
 
   // Notes hook
-  const { execute, data, error, isLoading } = useNotes(undefined, undefined, 'post');
+  const { execute } = useNotes(undefined, undefined, 'post');
 
   // Polling logic
   useInterval(async () => {
@@ -76,8 +82,15 @@ function NoteForm({ listId, onNoteCreated }: Props) {
 
   // Define a submit handler.
   const onSubmit = async (values: FormData) => {
+    const token = localStorage.getItem('authTokens');
+    
+    if (!token) {
+      toast({ variant: "default", description: "Please log in to comment." });
+      return;
+    }
+
     try {
-      const owner = jwtDecode(localStorage.getItem('authTokens')).user_id;
+      const owner = jwtDecode<MyJwtPayload>(token).user_id;
       const note_data = {
         youtube_url: values.youtube_url, 
         note_list: listId, 
@@ -92,23 +105,25 @@ function NoteForm({ listId, onNoteCreated }: Props) {
       reset();
 
     } catch (err) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('Error creating note:', err.message);
+      if (err instanceof Error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error creating note:', err.message);
+        }
+        toast({ variant: "destructive", description: "You must be the list owner to create a note, if you are, please refresh." }); // write custom message later
+        reset();
       }
-      toast({ variant: "destructive", description: "You must be the list owner to create a note, if you are, please refresh." }); // write custom message later
-      reset();
     }
   };
 
   return (
   	<>
-	  	<div className='rounded-lg bg-background p-4 outline outline-gray-100'>
+	  	<div className={`${className} rounded-lg bg-background p-4 outline outline-gray-100`}>
         <div className='items-start'>
   	  		<h3 className="text-lg font-bold">Create a new Note in this List</h3>
   		    <Form {...form} >
-  		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+  		      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
   		        <FormField
-  		          control={form.control}
+  		          control={control}
   		          name="youtube_url"
   		          render={({ field }) => (
   		            <FormItem>

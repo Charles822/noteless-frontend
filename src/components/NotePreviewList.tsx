@@ -15,7 +15,7 @@ import CommentsPreview from './CommentsPreview';
 import Vote from './Vote';
 
 interface Props {
-  listSlug: number;
+  listSlug: string;
   isCreated: boolean; // to notify this component to refresh upon creation of a new note
   reset: () => void; // notify ListDetails that this component has been refresh and reset the value
 }

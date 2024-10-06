@@ -13,6 +13,12 @@ export interface Comment {
 	updated_at: string;
 }
 
+// define this interface as the response object returned by our useComments call is not of type Comment
+export interface CommentsResponse {
+  have_comments: boolean;
+  comments: Comment[];
+}
+
 const useComments = (
 	noteId?: number, 
 	userId?: number,
@@ -31,7 +37,7 @@ const useComments = (
       ? `/interactions/comments/comments_count/?note=${noteId}`
       : `/interactions/comments/note_comments/?note=${noteId}`;
 
-	return useData<Comment>(endpoint, method, requestData);
+	return useData<Comment | CommentsResponse>(endpoint, method, requestData);
 	}
 
 export default useComments;
