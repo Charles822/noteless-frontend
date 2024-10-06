@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
  
 // this is not a built-in hook from React
-export function useInterval(callback, delay) {
-  const savedCallback = useRef();
+export function useInterval(callback: () => void, delay: number | null) {
+  const savedCallback = useRef<() => void>();
  
   // Remember the latest callback.
   useEffect(() => {

@@ -19,12 +19,15 @@ export interface CommentsResponse {
   comments: Comment[];
 }
 
+export interface CommentsCount {
+  comments_count: number;
+}
+
 const useComments = (
 	noteId?: number, 
-	userId?: number,
 	commentId?: number,  
 	method: 'get' | 'post' | 'patch' | 'delete' = 'get', 
-	endpointType?: 'count' | 'list' = 'list', 
+	endpointType: 'count' | 'list' = 'list', 
 	requestData?: any) => {
 	
 	const endpoint = method === 'post'
@@ -37,7 +40,7 @@ const useComments = (
       ? `/interactions/comments/comments_count/?note=${noteId}`
       : `/interactions/comments/note_comments/?note=${noteId}`;
 
-	return useData<Comment | CommentsResponse>(endpoint, method, requestData);
+	return useData<Comment | CommentsResponse | CommentsCount>(endpoint, method, requestData);
 	}
 
 export default useComments;

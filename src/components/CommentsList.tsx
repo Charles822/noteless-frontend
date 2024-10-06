@@ -30,7 +30,7 @@ interface MyJwtPayload extends JwtPayload {
 }
 
 const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDeletion }: Props) => { 
-  const { execute, data, error, isLoading } = useComments(noteId, undefined, undefined, 'get', 'list');
+  const { execute, data, error, isLoading } = useComments(noteId, undefined, 'get', 'list');
   const comments = (data as CommentsResponse)?.comments ?? null; // ensures that comments is an empty array if data.comments is undefined or null
   const token = localStorage.getItem('authTokens');
   const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from 'react-router-dom';
-import  { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import {
   Card,
   CardDescription,
@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { UrlLink } from '../utils/Formatting';
-import useNotes from "../hooks/useNotes"; 
+import useNotes from "../hooks/useNotes";
+import { Note } from "../hooks/useNotes";
 import CommentsPreview from './CommentsPreview';
 import Vote from './Vote';
 
@@ -20,10 +21,16 @@ interface Props {
   reset: () => void; // notify ListDetails that this component has been refresh and reset the value
 }
 
+// Tells typescript that my payload include a user_id property 
+interface MyJwtPayload extends JwtPayload {
+  user_id: number; 
+}
+
 const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
   const { execute, data, error, isLoading } = useNotes(listSlug);
+  const notes = (data as Note[]) ?? [];
   const token = localStorage.getItem('authTokens');
-  const userId = token ? jwtDecode(token).user_id : null;
+  const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
 
   useEffect(() => {
     execute(); // Trigger fetching the comment list
@@ -34,11 +41,11 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
   if (error) return <p>Error loading note: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data || !Array.isArray(data)) return <p>No notes available.</p>;
+  if (!notes || !Array.isArray(notes)) return <p>No notes available.</p>;
 
   // Tell the users when there are no notes yet in a list
   function noNotesMessage() {
-    if (data.length === 0) return <p>No notes available in this list yet.</p>;
+    if (notes.length === 0) return <p>No notes available in this list yet.</p>;
   }
   
   return (
@@ -46,7 +53,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
       <div className="col-span-3">
         <h3 className="text-lg font-bold mb-6">Notes in this List</h3>
         {noNotesMessage()}
-        {data && data.map((note) => 
+        {notes && notes.map((note) => 
           <div key={note.id} className="mb-2">
             <Separator className='gap-0 mb-1'/>
               <Card>
@@ -71,7 +78,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
                 </Link>
                 <CardFooter className="flex items-center justify-start gap-4 sm:px-6 sm:py-1.5">
                   <Vote noteId={note.id} userId={userId} ></Vote>
-                  <CommentsPreview noteId={note.id}></CommentsPreview>
+                  <CommentsPreview noteId={note.id} updateAfterDelete={false} updateAfterPost={false}></CommentsPreview>
                 </CardFooter>
               </Card>
           </div>

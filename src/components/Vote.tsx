@@ -1,7 +1,8 @@
-import { ReactNode, useState, useCallback, useEffect } from "react"
-import {ArrowBigUp, ArrowBigDown}from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
-import useVotes from '../hooks/useVotes'
+import { useState, useCallback, useEffect } from "react";
+import {ArrowBigUp, ArrowBigDown}from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import useVotes from '../hooks/useVotes';
+import { VoteResponse, VoteSum } from '../hooks/useVotes';
 
 interface Props {
 	noteId: number ;
@@ -11,10 +12,24 @@ interface Props {
 
 const Vote = ({ noteId, userId }: Props) => {
 	const [voteStatus, setVoteStatus] = useState<number | null>(null);
-	const { execute, data, error } = useVotes(noteId, userId); // Fetch votes data
-	const { execute: execute_patch } = useVotes(undefined, undefined, 'patch'); // update a vote
-	const { execute: execute_post, data: new_vote_data } = useVotes(undefined, undefined, 'post'); // create a vote 
-	const { execute: execute_votes_sum, data: votes_sum, error: votes_sum_error } = useVotes(noteId, undefined); // Get votes sum
+
+	// Fetch vote value: Only call useVotes with userId if it's not null
+	const userVoteData = userId !== null 
+	    ? useVotes(noteId, userId) 
+	    : { execute: () => {}, data: null, error: null };
+
+	const { execute, data } = userVoteData;
+	const voteResponse = (data as VoteResponse) ?? null;
+	
+	// update a vote
+	const { execute: execute_patch } = useVotes(undefined, undefined, 'patch'); 
+
+	// create a vote 
+	const { execute: execute_post } = useVotes(undefined, undefined, 'post'); 
+
+	// Get votes sum
+	const { execute: execute_votes_sum, data: note_votes_sum } = useVotes(noteId, undefined); 
+	const votes_sum = (note_votes_sum as VoteSum) ?? null;
 	const [voteSum, setVoteSum] = useState<number>(0);
 	const { toast } = useToast();
 
@@ -36,12 +51,12 @@ const Vote = ({ noteId, userId }: Props) => {
 
 
 	useEffect(() => {
-		if (data && data.vote) {
-			setVoteStatus(data.vote.vote);	
+		if (voteResponse && voteResponse.vote) {
+			setVoteStatus(voteResponse.vote.vote);	
 		} else {
 	    setVoteStatus(null); // Default if no vote
 	  }
-  }, [data]); // need to add dependency execute in prod server
+  }, [voteResponse]); // need to add dependency execute in prod server
 
 
 	// Load initial & updated votes count
@@ -73,7 +88,7 @@ const Vote = ({ noteId, userId }: Props) => {
     	const token = localStorage.getItem('authTokens');
 
 		if (!token) {
-			toast({ variant: "error", description: "Please log in to vote." });
+			toast({ variant: "destructive", description: "Please log in to vote." });
 		    return false;
 		};
 
@@ -93,7 +108,7 @@ const Vote = ({ noteId, userId }: Props) => {
 	    		: setVoteSum(voteSum  => voteSum + (new_vote_value));
 
 	    const vote_data = {
-	      id: data.vote.id,
+	      id: voteResponse.vote.id,
 	      vote: new_vote_value,
 	    };
 
@@ -125,8 +140,8 @@ const Vote = ({ noteId, userId }: Props) => {
 
 	    try {
 	      await execute_post(vote_data);
-	      if (new_vote_data)
-	      	data = new_vote_data;
+	      // if (new_vote_data)
+	      // 	data = new_vote_data;
 	    } catch (error) {
 	    	if (process.env.NODE_ENV === 'development') {
 	      	console.error("Error updating vote:", error);

@@ -47,7 +47,7 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   const { toast } = useToast();
 
   // Call useLists at the top level, cannot directly use it inside onSubmit
-  const { execute, error } = useComments(undefined, undefined, undefined, 'post', undefined);
+  const { execute, error } = useComments(undefined, undefined, 'post', undefined);
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
