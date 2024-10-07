@@ -61,28 +61,30 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
   const { execute } = useNotes(undefined, undefined, 'post');
 
   // Polling logic
-useInterval(async () => {
-  if (taskIds.length > 0) {
-    for (const taskId of taskIds) {
-      try {
-        const response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
-          method: 'GET',
-        });
-        const data = await response.json();
-        if (data.status === 'SUCCESS') {
-          toast({ variant: "success", description: "Your note is ready!" });
-          setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
-          onNoteCreated();
+  useInterval(async () => {
+    if (taskIds.length > 0) {
+      for (const taskId of taskIds) {
+        try {
+          console.log('Fetching task status...');
+          const response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
+            method: 'GET',
+          });
+          const data = await response.json();
+          console.log('Task status: it should be processing');
+          if (data.status === 'SUCCESS') {
+            toast({ variant: "success", description: "Your note is ready!" });
+            setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
+            onNoteCreated();
+          }
+        } catch (error) {
+          console.error('Error fetching task status:', error);
         }
-      } catch (error) {
-        console.error('Error fetching task status:', error);
       }
     }
-  }
-  if (taskIds.length === 0) {
-    setDelay(null);
-  }
-}, delay);
+    if (taskIds.length === 0) {
+      setDelay(null);
+    }
+  }, delay);
 
   // Define a submit handler.
   const onSubmit = async (values: FormData) => {
