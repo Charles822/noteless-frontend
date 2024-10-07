@@ -10,10 +10,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import useLists from "../hooks/useLists"; 
 import { List }from "../hooks/useLists"; 
+import baseURL from "../services/api-client";
 
 const ListGrid = () => {
   const { execute, data, error, isLoading } = useLists();
   const lists = (data as List[]) ?? [];
+  console.log(baseURL);
 
   useEffect(() => {
     execute(); // Trigger fetching lists
