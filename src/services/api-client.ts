@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const baseURL = process.env.REACT_APP_API_BASE_URL;
-
+console.log(baseURL)
 const createAxiosInstance = () => {
   const token = localStorage.getItem('authTokens');
   const headers = token ? { Authorization: `Bearer ${JSON.parse(token).access}` } : {};
