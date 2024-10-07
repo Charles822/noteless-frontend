@@ -1,7 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import  { jwtDecode } from 'jwt-decode';
-
 
 interface UserType {
   // Define the properties according to the decoded token structure
@@ -25,19 +23,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export default AuthContext;
 
 export const AuthProvider = ({children}: { children: React.ReactNode }) => {
-
-    let [user, setUser] = useState(() => (localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null))
-    let [authTokens, setAuthTokens] = useState(() => (localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null))
+    const tokens = localStorage.getItem('authTokens');
+    let [user, setUser] = useState<UserType | null>(() => {
+        return tokens ? jwtDecode(tokens) : null;
+    });
+    let [authTokens, setAuthTokens] = useState<AuthTokensType | null>(() => {   
+      return tokens ? JSON.parse(tokens) : null;
+    });
     let [loading, setLoading] = useState(true)
 
-    let loginUser = async (e) => {
+    let loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        const target = e.target as HTMLFormElement;
+        const username = (target.elements.namedItem('username') as HTMLInputElement).value;
+        const password = (target.elements.namedItem('password') as HTMLInputElement).value;
         const response = await fetch('http://127.0.0.1:8000/api/token/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({username: e.target.username.value, password: e.target.password.value })
+            body: JSON.stringify({ username, password })
         });
 
         let data = await response.json();

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios, { AxiosRequestConfig, AxiosError } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { axiosInstance } from '../services/api-client';
 
 const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig) => {
@@ -7,13 +7,13 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const execute = async (requestData?: any) => {
+  const execute = async (overrideRequestData?: any) => {
     setLoading(true);
     try {
       const response = await axiosInstance({
         url: endpoint,
         method,
-        data: requestData,
+        data: overrideRequestData ?? requestData, // Use either the override or initial requestData,
         ...requestConfig
       });
       setData(response.data);
