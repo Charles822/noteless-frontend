@@ -68,6 +68,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
         method: 'GET',
       });
       const data = await response.json();
+      console.log(data.status);
       if (data.status === 'SUCCESS') {
         toast({ variant: "success", description: "Your note is ready!" });
         // Remove completed task ID from the array
