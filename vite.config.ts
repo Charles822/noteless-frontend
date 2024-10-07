@@ -11,6 +11,6 @@ export default defineConfig({
     },
   },
   define: {
-    VITE_APP_API_BASE_URL: process.env.VITE_APP_API_BASE_URL,
+    VITE_APP_API_BASE_URL: process.env.VITE_VERCEL_ENV,
   },
 })
