@@ -38,10 +38,6 @@ interface Props {
   onNoteCreated: () => void;
 }
 
-interface TaskResult {
-  status: string;
-}
-
 function NoteForm({ className, listId, onNoteCreated }: Props) {
   const [delay, setDelay] = useState<number | null>(5000);
   const [taskIds, setTaskIds] = useState<string[]>([]);
@@ -65,23 +61,27 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
   const { execute } = useNotes(undefined, undefined, 'post');
 
   // Polling logic
-  useInterval<TaskResult>(async () => {
+useInterval(async () => {
   if (taskIds.length > 0) {
     for (const taskId of taskIds) {
-      const response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
-        method: 'GET',
-      });
-      const data = await response.json();
-      if (data.status === 'SUCCESS') {
-        toast({ variant: "success", description: "Your note is ready!" });
-        // Remove completed task ID from the array
-        setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
-        onNoteCreated(); // Notify parent - ListDetail
+      try {
+        const response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
+          method: 'GET',
+        });
+        const data = await response.json();
+        console.log('Task status:', data);
+        if (data.status === 'SUCCESS') {
+          toast({ variant: "success", description: "Your note is ready!" });
+          setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
+          onNoteCreated();
+        }
+      } catch (error) {
+        console.error('Error fetching task status:', error);
       }
     }
-    if (taskIds.length === 0) {
-      setDelay(null); // Stop polling if no tasks left
-    }
+  }
+  if (taskIds.length === 0) {
+    setDelay(null);
   }
 }, delay);
 
