@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react'
 import  { jwtDecode } from 'jwt-decode';
+import { baseURL } from "../services/api-client";
 
 interface UserType {
   // Define the properties according to the decoded token structure
@@ -37,7 +38,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         const target = e.target as HTMLFormElement;
         const username = (target.elements.namedItem('username') as HTMLInputElement).value;
         const password = (target.elements.namedItem('password') as HTMLInputElement).value;
-        const response = await fetch('http://127.0.0.1:8000/api/token/', {
+        const response = await fetch(`${baseURL}/api/token/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

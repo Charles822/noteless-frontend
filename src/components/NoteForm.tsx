@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
+import { baseURL } from "../services/api-client";
 import { useInterval } from "../hooks/useInterval";
 import useNotes from '../hooks/useNotes'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -63,7 +64,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
   useInterval(async () => {
   if (taskIds.length > 0) {
     for (const taskId of taskIds) {
-      const response = await fetch(`http://127.0.0.1:8000/notes/notes/check_task_status/${taskId}/`, {
+      const response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
         method: 'GET',
       });
       const data = await response.json();
