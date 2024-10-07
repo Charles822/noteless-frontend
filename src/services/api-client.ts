@@ -2,7 +2,6 @@ import axios from 'axios';
 
 export const baseURL = import.meta.env.VITE_API_BASE_URL;
 console.log('baseURL', baseURL)
-console.log('process', process.env)
 const createAxiosInstance = () => {
   const token = localStorage.getItem('authTokens');
   const headers = token ? { Authorization: `Bearer ${JSON.parse(token).access}` } : {};
