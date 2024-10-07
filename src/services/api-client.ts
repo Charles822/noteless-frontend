@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = process.env.VITE_APP_API_BASE_URL;
+export const baseURL = process.env.VITE_API_BASE_URL;
 console.log('baseURL', baseURL)
 console.log('process', process.env)
 const createAxiosInstance = () => {

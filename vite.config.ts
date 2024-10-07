@@ -10,7 +10,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    VITE_APP_API_BASE_URL: process.env.VITE_VERCEL_ENV,
-  },
 })
