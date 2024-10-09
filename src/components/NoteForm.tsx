@@ -68,18 +68,14 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
   useInterval(async () => {
     if (taskIds.length > 0) {
       for (const taskId of taskIds) {
-        try {
-          const response: Response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
-            method: 'GET',
-          });
-          const data: TaskResponse = await response.json();
-          if (data.status === 'SUCCESS') {
-            toast({ variant: "success", description: "Your note is ready!" });
-            setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
-            onNoteCreated();
-          }
-        } catch (error) {
-          console.error('Error fetching task status:', error);
+        const response: Response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
+          method: 'GET',
+        });
+        const data: TaskResponse = await response.json();
+        if (data.status === 'SUCCESS') {
+          toast({ variant: "success", description: "Your note is ready!" });
+          setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
+          onNoteCreated();
         }
       }
     }
