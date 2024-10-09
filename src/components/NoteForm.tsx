@@ -69,10 +69,10 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
     if (taskIds.length > 0) {
       for (const taskId of taskIds) {
         try {
-          const response: TaskResponse = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
+          const response: Response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
             method: 'GET',
           });
-          const data = await response.json();
+          const data: TaskResponse = await response.json();
           if (data.status === 'SUCCESS') {
             toast({ variant: "success", description: "Your note is ready!" });
             setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
