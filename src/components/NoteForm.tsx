@@ -38,6 +38,10 @@ interface Props {
   onNoteCreated: () => void;
 }
 
+type TaskResponse = {
+  status: string;
+};
+
 function NoteForm({ className, listId, onNoteCreated }: Props) {
   const [delay, setDelay] = useState<number | null>(5000);
   const [taskIds, setTaskIds] = useState<string[]>([]);
@@ -65,7 +69,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
     if (taskIds.length > 0) {
       for (const taskId of taskIds) {
         try {
-          const response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
+          const response: TaskResponse = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
             method: 'GET',
           });
           const data = await response.json();
