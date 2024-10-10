@@ -66,23 +66,24 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
 
   // Polling logic
   useInterval(async () => {
-    if (taskIds.length > 0) {
-      for (const taskId of taskIds) {
-        const response: Response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
-          method: 'GET',
-        });
-        const data: TaskResponse = await response.json();
-        if (data.status === 'SUCCESS') {
-          toast({ variant: "success", description: "Your note is ready!" });
-          setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
-          onNoteCreated();
-        }
+  if (taskIds.length > 0) {
+    for (const taskId of taskIds) {
+      const response: Response = await fetch(`${baseURL}/notes/notes/check_task_status/${taskId}/`, {
+        method: 'GET',
+      });
+      const data: TaskResponse = await response.json();
+      if (data.status === 'SUCCESS') {
+        toast({ variant: "success", description: "Your note is ready!" });
+        // Remove completed task ID from the array
+        setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
+        onNoteCreated(); // Notify parent - ListDetail
       }
     }
     if (taskIds.length === 0) {
-      setDelay(null);
+      setDelay(null); // Stop polling if no tasks left
     }
-  }, delay);
+  }
+}, delay);
 
   // Define a submit handler.
   const onSubmit = async (values: FormData) => {

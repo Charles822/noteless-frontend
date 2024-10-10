@@ -6,7 +6,7 @@ const Logo = () => {
 	return (
 		<div className='flex col-2'>
 			<Button
-				  variant="default"
+				  variant="ghost"
 			      size="icon"
 			      className="overflow-hidden rounded-full mx-4 my-4 mr-1"
 			      >
