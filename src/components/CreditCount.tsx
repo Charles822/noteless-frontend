@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import useUsers from '../hooks/useUsers';
 import { ProfileResponse } from '../hooks/useUsers';
 
@@ -6,25 +7,28 @@ interface Props {
 }
 
 const CreditCount = ({ userId }: Props) => {
-	console.log(userId);
-
 	// Fetch credit value: Only call useUsers if userId is not null
 	const userProfile = userId !== null 
-	    ? useUsers(userId, 'get') 
+	    ? useUsers(userId) 
 	    : { execute: () => {}, data: null, error: null };
-
-	const { execute, data } = userProfile;
-	console.log(userProfile);
+	const { execute, data } = useUsers(userId) 
 	const profileResponse = (data as ProfileResponse) ?? null;
-	console.log(profileResponse);
+
+	// Fetch initial profile data 
+	useEffect(() => {
+		execute();
+	}, []);
 
 
 	return (
-		<div>
-			Credit: { 
-				profileResponse && profileResponse.profile ? profileResponse.profile.credit : 0
-			}
-		</div>
+		<>
+			<div className="flex gap-1 text-sm text-rose-700">
+				<div>
+					{ profileResponse && profileResponse.profile ? profileResponse.profile.credit : 0 }
+				</div>
+				<p>credits</p>
+			</div>
+		</>
 	)
 }
 

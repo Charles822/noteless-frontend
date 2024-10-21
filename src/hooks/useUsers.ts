@@ -21,18 +21,17 @@ export interface ProfileResponse {
 
 const useUsers = (
 	userId?: number,
-	method: 'post' | 'get' | 'patch' = 'post' , 
+	method: 'get' | 'post' | 'patch' = 'get', 
 	requestData?: any) => {
 	
-	const endpoint = method === 'post'
-      ? `/users/users/create_user/`
-      : method === 'get'
-      	? `/users/profiles/user-profile/?user=${userId}/`
-      	: method === 'patch'
-      		? `/users/profiles/deduct-credit/?user=${userId}/`
-      		: '';
+	const endpoint = 
+		method === 'post'
+		  ? `/users/users/create_user/`
+		  : method === 'get'
+		  	? `/users/profiles/user_profile/?user=${userId}`
+		  	: `/users/profiles/deduct-credit/?user=${userId}`;
 
-	return useData<User>(endpoint, method, requestData);
+	return useData<User | ProfileResponse>(endpoint, method, requestData);
 	}
 
 export default useUsers;

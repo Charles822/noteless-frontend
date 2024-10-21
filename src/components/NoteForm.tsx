@@ -136,8 +136,9 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
   		              <FormControl>
   		                <Input disabled={isSubmitting} placeholder="Paste the link here" {...field} />
   		              </FormControl>
-  		              <FormDescription>
-  		                Copy the link of your youtube video and paste here. Then let the magic happen!
+  		              <FormDescription className="flex flex-col gap-2">
+                      <p>Copy the link of your youtube video and paste here. Then let the magic happen!</p>
+                      <p className="text-rose-700">Cost: 1 credit</p>
   		              </FormDescription>
   		              <FormMessage />
   		            </FormItem>
