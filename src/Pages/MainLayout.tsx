@@ -1,8 +1,11 @@
+import React from "react";
 import { Outlet } from 'react-router-dom';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import Header from '../components/Header';
 import Sidenav from './Sidenav';
 
-function MainLayout() {
+
+const MainLayout: React.FC = () => {  
   return (
     <>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -18,7 +21,7 @@ function MainLayout() {
           </div>
         </div>
       </div>
-    </>
+    </>  
   );
 }
 

@@ -1,24 +1,8 @@
-import { useEffect } from "react"
-import useUsers from '../hooks/useUsers';
-import { ProfileResponse } from '../hooks/useUsers';
+import React from "react";
+import { useProfileContext } from '../context/CreditContext';
 
-interface Props {
-	userId: number | null;
-}
-
-const CreditCount = ({ userId }: Props) => {
-	// Fetch credit value: Only call useUsers if userId is not null
-	const userProfile = userId !== null 
-	    ? useUsers(userId) 
-	    : { execute: () => {}, data: null, error: null };
-	const { execute, data } = useUsers(userId) 
-	const profileResponse = (data as ProfileResponse) ?? null;
-
-	// Fetch initial profile data 
-	useEffect(() => {
-		execute();
-	}, []);
-
+const CreditCount: React.FC = () => {
+	const profileResponse = useProfileContext();
 
 	return (
 		<>

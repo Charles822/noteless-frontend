@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet';
 import useLists from "../hooks/useLists"
 import NotePreviewList from  "./NotePreviewList"
 import NoteForm from './NoteForm'
 
-const ListDetails = () => {
+const ListDetails: React.FC = () => {
   const params = useParams<{slug: string}>();
   const slug = params.slug;
   const [isCreated, setIsCreated] = useState(false);

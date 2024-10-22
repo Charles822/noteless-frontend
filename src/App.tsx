@@ -8,11 +8,16 @@ import ListForm from './components/ListForm';
 import { LoginPage } from './Pages/LoginPage';
 import NotFoundPage from './Pages/NotFoundPage';
 import SignUpPage from './Pages/SignUpPage';
+import { ProfileProvider } from './context/CreditContext';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <MainLayout />,
+        element: (
+          <ProfileProvider>
+            <MainLayout />
+          </ProfileProvider>
+          ),
         errorElement: <NotFoundPage />,
         children: [
           { path: '/', element: <ListGrid />, },
