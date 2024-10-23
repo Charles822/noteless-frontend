@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import useUsers from '../hooks/useUsers';
 import { ProfileResponse } from '../hooks/useUsers';
 import { baseURL } from "../services/api-client";
 
@@ -21,7 +20,7 @@ const token = localStorage.getItem('authTokens');
 const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
 
 export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) => {
-	const [profile, setProfile] = useState<ProfileResponse | null>(null);
+	const [profile, setProfile] = useState<ProfileResponse | undefined>(undefined);
 	console.log('provider being called');
 
 	useEffect(() => {

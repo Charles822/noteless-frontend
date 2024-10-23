@@ -123,7 +123,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
     
       // Call the API to create a note
       const response = await execute(note_data);
-      const credit_response = deduct_credit(credit_data);
+      deduct_credit(credit_data);
       setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
       
       toast({ variant: "loading", description: "Your note is processing!" });

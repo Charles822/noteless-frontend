@@ -1,6 +1,5 @@
 import React from "react";
 import { Outlet } from 'react-router-dom';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
 import Header from '../components/Header';
 import Sidenav from './Sidenav';
 

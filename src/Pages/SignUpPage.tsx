@@ -133,7 +133,7 @@ export default function SignUpPage() {
   const { toast } = useToast();
 
   // Call useUsers at the top level
-  const { execute, error } = useUsers('post');
+  const { execute, error } = useUsers(undefined, 'post');
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
