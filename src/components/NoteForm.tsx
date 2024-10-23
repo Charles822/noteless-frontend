@@ -15,10 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { baseURL } from "../services/api-client";
+import { useProfileContext } from '../context/CreditContext';
 import { useInterval } from "../hooks/useInterval";
-import useNotes from '../hooks/useNotes'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import useNotes from '../hooks/useNotes';
+import useUsers from '../hooks/useUsers';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -45,6 +47,8 @@ type TaskResponse = {
 function NoteForm({ className, listId, onNoteCreated }: Props) {
   const [delay, setDelay] = useState<number | null>(5000);
   const [taskIds, setTaskIds] = useState<string[]>([]);
+  const profileResponse = useProfileContext(); // Using profile context to get userId and credit count
+
 
   // 1. Define your form.
   const form = useForm<FormData>({
@@ -61,8 +65,12 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
   const { toast } = useToast();
 
 
-  // Notes hook
+  // Initializin Notes hook
   const { execute } = useNotes(undefined, undefined, 'post');
+
+
+  // Inititalizing Users Hook for credit deduction
+  const { execute: deduct_credit } = useUsers(undefined, 'patch'); 
 
   // Polling logic
   useInterval(async () => {
@@ -94,16 +102,28 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
       return;
     }
 
+    if (!profileResponse || profileResponse.profile.credit === 0) {
+      toast({ variant: "destructive", description: "Your out of credits, please buy new credits to publish notes." });
+      return;
+    }
+
     try {
       const owner = jwtDecode<MyJwtPayload>(token).user_id;
+      // Arguments for the post request
       const note_data = {
         youtube_url: values.youtube_url, 
         note_list: listId, 
         owner
       };
+
+      // Arguments for the patch credit request
+      const credit_data = {
+        user: owner,
+      };
     
       // Call the API to create a note
       const response = await execute(note_data);
+      const credit_response = deduct_credit(credit_data);
       setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
       
       toast({ variant: "loading", description: "Your note is processing!" });
@@ -115,6 +135,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
           console.error('Error creating note:', err.message);
         }
         toast({ variant: "destructive", description: "You must be the list owner to create a note, if you are, please refresh." }); // write custom message later
+        // add credit refund logic
         reset();
       }
     }

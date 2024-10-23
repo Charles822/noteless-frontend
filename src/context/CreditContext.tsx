@@ -38,7 +38,7 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
 
 	    fetchProfile();
 	  }
-}, [userId]);
+}, [profile]);
 
 	return (
 		<ProfileContext.Provider value={profile}>

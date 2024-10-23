@@ -21,8 +21,16 @@ const Header: React.FC = () => {
 		<header className="flex h-14 items-center gap-4 border-b bg-background px-4">
 			<Logo />
 			<SearchHeader />
-			<CreditCount />
-			<ProfileButton />
+			{ user ? (
+				<>
+					<CreditCount />
+					<ProfileButton />
+				</>) : (
+				<Link to="/login">
+					<Button>Login</Button>
+				</Link>
+				)
+			}
 		</header>
 	);
 };

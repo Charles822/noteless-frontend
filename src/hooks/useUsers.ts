@@ -29,7 +29,7 @@ const useUsers = (
 		  ? `/users/users/create_user/`
 		  : method === 'get'
 		  	? `/users/profiles/user_profile/?user=${userId}`
-		  	: `/users/profiles/deduct-credit/?user=${userId}`;
+		  	: `/users/profiles/deduct_credit/`;
 
 	return useData<User | ProfileResponse>(endpoint, method, requestData);
 	}
