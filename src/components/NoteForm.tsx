@@ -47,7 +47,7 @@ type TaskResponse = {
 function NoteForm({ className, listId, onNoteCreated }: Props) {
   const [delay, setDelay] = useState<number | null>(5000);
   const [taskIds, setTaskIds] = useState<string[]>([]);
-  const profileResponse = useProfileContext(); // Using profile context to get userId and credit count
+  const { profile, refetchProfile } = useProfileContext(); // Using profile context to get userId and credit count
 
 
   // 1. Define your form.
@@ -82,6 +82,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
       const data: TaskResponse = await response.json();
       if (data.status === 'SUCCESS') {
         toast({ variant: "success", description: "Your note is ready!" });
+        refetchProfile();
         // Remove completed task ID from the array
         setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
         onNoteCreated(); // Notify parent - ListDetail
@@ -102,7 +103,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
       return;
     }
 
-    if (!profileResponse || profileResponse.profile.credit === 0) {
+    if (!profile || profile.profile.credit === 0) {
       toast({ variant: "destructive", description: "Your out of credits, please buy new credits to publish notes." });
       return;
     }
@@ -123,7 +124,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
     
       // Call the API to create a note
       const response = await execute(note_data);
-      deduct_credit(credit_data);
+      deduct_credit(credit_data); // deduct points right away to prevent users to pass new note requests without having points (set up refund logic in case of failure)
       setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
       
       toast({ variant: "loading", description: "Your note is processing!" });
