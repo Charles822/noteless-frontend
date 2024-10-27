@@ -28,22 +28,6 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
 	const [profile, setProfile] = useState<ProfileResponse | null>(null);
 	console.log('provider being called');
 
-// 	useEffect(() => {
-// 	  if (userId) {
-// 	    const fetchProfile = async () => {
-// 	      try {
-// 	        const response = await fetch(`${baseURL}/users/profiles/user_profile/?user=${userId}`);
-// 	        const data: ProfileResponse = await response.json();
-// 	        setProfile(data);
-// 	      } catch (error) {
-// 	        console.error('Error fetching profile:', error);
-// 	      }
-// 	    };
-
-// 	    fetchProfile();
-// 	  }
-// }, []); 
-
 	const fetchProfile = async () => {
 		if (userId) {
 	      try {

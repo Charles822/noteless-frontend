@@ -9,6 +9,7 @@ import { LoginPage } from './Pages/LoginPage';
 import NotFoundPage from './Pages/NotFoundPage';
 import SignUpPage from './Pages/SignUpPage';
 import { ProfileProvider } from './context/CreditContext';
+import Checkout from './Pages/Checkout';
 
 const router = createBrowserRouter([
     {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
     },
     { path: 'login', element: <LoginPage />, },
     { path: 'signup', element: <SignUpPage />, },
+    { path: 'checkout', element: <Checkout />, },
 ]);
 
 function App() {

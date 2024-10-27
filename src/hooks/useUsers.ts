@@ -21,7 +21,8 @@ export interface ProfileResponse {
 
 const useUsers = (
 	userId?: number,
-	method: 'get' | 'post' | 'patch' = 'get', 
+	method: 'get' | 'post' | 'patch' = 'get',
+	endpointType: 'deduct' | 'add' = 'deduct', 
 	requestData?: any) => {
 	
 	const endpoint = 
@@ -29,7 +30,9 @@ const useUsers = (
 		  ? `/users/users/create_user/`
 		  : method === 'get'
 		  	? `/users/profiles/user_profile/?user=${userId}`
-		  	: `/users/profiles/deduct_credit/`;
+		  	: endpointType === 'deduct'
+			  	? `/users/profiles/deduct_credit/`
+			  	: `/users/profiles/add_credit/`;
 
 	return useData<User | ProfileResponse>(endpoint, method, requestData);
 	}
