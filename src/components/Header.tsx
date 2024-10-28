@@ -21,17 +21,22 @@ const Header: React.FC = () => {
 		<header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4">
 			<Logo />
 			<div className="flex items-center gap-4 ">
-				<Link to="/checkout">
-					<p>Pricing</p>
-				</Link>
 				{ user ? (
-					<>
+					<>	
+						<Link to="/checkout">
+							<Button className='bg-transparent border border-rose-500 font-normal text-rose-700 hover:text-white h-6 p-1 '>Buy Credits</Button>
+						</Link>
 						<CreditCount />
 						<ProfileButton />
 					</>) : (
-					<Link to="/login">
-						<Button>Login</Button>
-					</Link>
+					<div>
+						<Link to="/checkout">
+							<p>Pricing</p>
+						</Link>
+						<Link to="/login">
+							<Button>Login</Button>
+						</Link>
+					</div>
 					)
 				}
 			</div>
