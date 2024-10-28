@@ -175,7 +175,7 @@ export default function SignUpPage() {
           <CardHeader>
             <CardTitle className="text-2xl">Create a new account</CardTitle>
             <CardDescription>
-              Create a new account to start creating your own lists and notes! 
+              <p>Create a new account and <a className='text-rose-700'>grab your free credits</a> to start creating your own lists and notes!</p>
             </CardDescription>
           </CardHeader>
           <CardContent>

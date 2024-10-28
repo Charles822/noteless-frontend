@@ -18,19 +18,23 @@ const Header: React.FC = () => {
 	const { user } = authContext;
 
 	return (
-		<header className="flex h-14 items-center gap-4 border-b bg-background px-4">
+		<header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4">
 			<Logo />
-			<SearchHeader />
-			{ user ? (
-				<>
-					<CreditCount />
-					<ProfileButton />
-				</>) : (
-				<Link to="/login">
-					<Button>Login</Button>
+			<div className="flex items-center gap-4 ">
+				<Link to="/checkout">
+					<p>Pricing</p>
 				</Link>
-				)
-			}
+				{ user ? (
+					<>
+						<CreditCount />
+						<ProfileButton />
+					</>) : (
+					<Link to="/login">
+						<Button>Login</Button>
+					</Link>
+					)
+				}
+			</div>
 		</header>
 	);
 };
