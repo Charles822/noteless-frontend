@@ -59,7 +59,7 @@ function ListForm() {
   const navigate = useNavigate();
 
   // we'll use this to convert the new list name into a slug for the redirection once the list is created
-  const slugify = (text) => { 
+  const slugify = (text: string) => { 
   return text
     .toString()
     .toLowerCase()

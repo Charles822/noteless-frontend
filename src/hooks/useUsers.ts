@@ -1,4 +1,5 @@
-import useData from "./useData.ts";
+import useData from './useData';
+import { List } from './useLists';
 
 export interface User {
 	id: number;
@@ -22,19 +23,21 @@ export interface ProfileResponse {
 const useUsers = (
 	userId?: number,
 	method: 'get' | 'post' | 'patch' = 'get',
-	endpointType: 'deduct' | 'add' = 'deduct', 
+	endpointType: 'deduct' | 'add' | 'list' | 'profile' = 'deduct', 
 	requestData?: any) => {
 	
 	const endpoint = 
 		method === 'post'
 		  ? `/users/users/create_user/`
-		  : method === 'get'
-		  	? `/users/profiles/user_profile/?user=${userId}`
-		  	: endpointType === 'deduct'
-			  	? `/users/profiles/deduct_credit/`
-			  	: `/users/profiles/add_credit/`;
+		  : endpointType === 'list'
+		  	? `/users/users/${userId}/lists/`
+			  	: endpointType === 'profile'
+			  	? `/users/profiles/user_profile/?user=${userId}`
+		  		: endpointType === 'deduct'
+				  	? `/users/profiles/deduct_credit/`
+				  	: `/users/profiles/add_credit/`;
 
-	return useData<User | ProfileResponse>(endpoint, method, requestData);
+	return useData<User | ProfileResponse | List[]>(endpoint, method, requestData);
 	}
 
 export default useUsers;
