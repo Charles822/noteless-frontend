@@ -70,7 +70,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
 
 
   // Inititalizing Users Hook for credit deduction
-  const { execute: deduct_credit } = useUsers(undefined, 'patch'); 
+  const { execute: deduct_credit } = useUsers(undefined, 'patch', 'deduct'); 
 
   // Polling logic
   useInterval(async () => {

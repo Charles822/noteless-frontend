@@ -30,7 +30,7 @@ const registerUserSchema = z.object({
   email: z.string().email({
     message: "Email must be valid.",
   }),
-  username: z.string().min(10, {
+  username: z.string().min(7, {
     message: "Your list description must be at least 10 characters.",
   }),
   password: z.string().min(8,  {
@@ -160,7 +160,7 @@ export default function SignUpPage() {
   };
 
   if (redirect) {
-    return <Navigate to="/login/new" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
