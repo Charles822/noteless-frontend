@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button";
 import {
@@ -55,6 +56,21 @@ function ListForm() {
 
   const { toast } = useToast();
 
+  const navigate = useNavigate();
+
+  // we'll use this to convert the new list name into a slug for the redirection once the list is created
+  const slugify = (text) => { 
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')    // Replace spaces with -
+    .replace(/[^\w-]+/g, '') // Remove all non-word chars
+    .replace(/--+/g, '-')    // Replace multiple - with single -
+    .replace(/^-+/, '')      // Trim - from start of text
+    .replace(/-+$/, '');     // Trim - from end of text
+};
+
   // Call useLists at the top level
   const { execute, error } = useLists(undefined, 'post');
 
@@ -75,6 +91,9 @@ function ListForm() {
       owner: owner
     };
 
+    // prepare the slug for redirection
+    const slug = slugify(values.name);
+
     // Call the API request here
     await execute(list_data);
 
@@ -84,8 +103,9 @@ function ListForm() {
     	}
     	toast({ variant: "destructive", description: "Your list cannot be created at the moment!" });
     } else {
-      toast({variant: "success", description: "Your list has been created successfully!"});
+      await toast({variant: "success", description: "Your list has been created successfully!"});
       reset();
+      navigate(`/list/${slug}`);
     }
   };
 
