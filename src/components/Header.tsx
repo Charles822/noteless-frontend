@@ -21,14 +21,14 @@ const Header: React.FC = () => {
 			<Logo />
 			<div className="flex items-center gap-4 ">
 				{ user ? (
-					<>	
+					<>
 						<Link to="/checkout">
 							<Button className='bg-transparent border border-rose-500 font-normal text-rose-700 hover:text-white h-6 p-1 '>Buy Credits</Button>
 						</Link>
 						<CreditCount />
 						<ProfileButton />
 					</>) : (
-					<div>
+					<div className="flex items-center gap-4">
 						<Link to="/checkout">
 							<p>Pricing</p>
 						</Link>

@@ -1,5 +1,6 @@
 import useData from './useData';
 import { List } from './useLists';
+import { Note } from './useNotes';
 
 export interface User {
 	id: number;
@@ -23,7 +24,7 @@ export interface ProfileResponse {
 const useUsers = (
 	userId?: number,
 	method: 'get' | 'post' | 'patch' = 'get',
-	endpointType: 'deduct' | 'add' | 'list' | 'profile' = 'deduct', 
+	endpointType: 'deduct' | 'add' | 'list' | 'notes' = 'deduct', 
 	requestData?: any) => {
 	
 	const endpoint = 
@@ -31,13 +32,13 @@ const useUsers = (
 		  ? `/users/users/create_user/`
 		  : endpointType === 'list'
 		  	? `/users/users/${userId}/lists/`
-			  	: endpointType === 'profile'
-			  	? `/users/profiles/user_profile/?user=${userId}`
+			  	: endpointType === 'notes'
+			  	? `/users/users/${userId}/notes/`
 		  		: endpointType === 'deduct'
 				  	? `/users/profiles/deduct_credit/`
 				  	: `/users/profiles/add_credit/`;
 
-	return useData<User | ProfileResponse | List[]>(endpoint, method, requestData);
+	return useData<User | ProfileResponse | List[] | Note[]>(endpoint, method, requestData);
 	}
 
 export default useUsers;
