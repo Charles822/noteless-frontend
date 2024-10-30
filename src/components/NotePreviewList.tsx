@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import {
@@ -8,11 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import { UrlLink } from '../utils/Formatting';
 import useNotes from "../hooks/useNotes";
 import { Note } from "../hooks/useNotes";
 import CommentsPreview from './CommentsPreview';
+import ClientPagination from './ClientPagination';
 import Vote from './Vote';
 
 interface Props {
@@ -31,6 +41,14 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
   const notes = (data as Note[]) ?? [];
   const token = localStorage.getItem('authTokens');
   const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
+  // Pagination variables
+  // const [displayedNotes, setDisplayedNotes] = useState<Note[]>(notes);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [notesPerPage, setNotesPerPage] = useState(5);
+
+  const lastNoteIndex = currentPage * notesPerPage;
+  const firstNoteIndex = lastNoteIndex - notesPerPage;
+  const currentNotes = notes.slice(firstNoteIndex, lastNoteIndex);
 
   useEffect(() => {
     execute(); // Trigger fetching the notes list
@@ -53,7 +71,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
       <div className="col-span-3">
         <h3 className="text-lg font-bold mb-6">Notes in this List</h3>
         {noNotesMessage()}
-        {notes && notes.map((note) => 
+        {currentNotes && currentNotes.map((note) => 
           <div key={note.id} className="mb-2">
             <Separator className='gap-0 mb-1'/>
               <Card>
@@ -83,9 +101,57 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
               </Card>
           </div>
         )}
+        <PaginationSection totalNotes={notes.length} notesPerPage={notesPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
     </>
   )
 }
 
 export default NotePreviewList;
+
+function PaginationSection({
+  totalNotes,
+  notesPerPage,
+  currentPage,
+  setCurrentPage,
+}: {totalNotes: any,
+  notesPerPage: any,
+  currentPage: any,
+  setCurrentPage: any,}
+  ) 
+{
+
+  // Rule to define the number of pages dynamically
+  let pages = [];
+  for (let numberOfPages = 1; numberOfPages <= Math.ceil(totalNotes / notesPerPage); numberOfPages++) {
+    pages.push(numberOfPages);
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < pages.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  return (
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious onClick={() => handlePrevPage()} />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext onClick={() => handleNextPage()} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    )
+
+}
+
+
