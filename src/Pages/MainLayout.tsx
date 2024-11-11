@@ -16,7 +16,7 @@ const MainLayout: React.FC = () => {
           <div className="fixed flex-shrink-0">
             <Sidenav />
           </div>
-          <div className="py-14 pl-14">
+          <div className="py-14 pl-14 w-full">
             <Outlet />
           </div>
         </div>

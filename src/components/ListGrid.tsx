@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Card,
@@ -7,18 +7,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import useLists from "../hooks/useLists"; 
 import { List }from "../hooks/useLists"; 
 
 const ListGrid = () => {
-  const { execute, data, error, isLoading } = useLists();
-  const lists = (data as List[]) ?? [];
+  const [pageNumber, setPageNumber] = useState(1);
+  const { execute, data, error, isLoading } = useLists(undefined, 'get', undefined, pageNumber);
+  const listsResponse = (data as List[]) ?? [];
+  const lists = listsResponse.results;
+
+  console.log(lists);
+
+  // Pagination variables
+  const handleNext = () => setPageNumber(prev => prev + 1);
+  const handlePrevious = () => setPageNumber(prev => Math.max(prev - 1, 1));
+  const totalItems = listsResponse.count;
+  const itemsPerPage = 10; // Adjust as needed
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
     execute(); // Trigger fetching lists
-  }, []); // need to add depency execute in prod server
+  }, [pageNumber]); // need to add depency execute in prod server
 
+  console.log(lists);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading lists: {error.message}</p>;
 
@@ -27,24 +48,28 @@ const ListGrid = () => {
   
   return (
     <>
-      <h1 className="my-2 px-6 text-2xl font-bold">All Lists</h1>
-      <div>
+      <h1 className="my-2 w-full px-6 text-2xl font-bold">All Lists</h1>
+      <div >
         {lists && lists.map((list) => 
-          <div key={list.id} className="grid w-5/6 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-2 lg:grid-cols-1 xl:grid-cols-1 mb-2">
+          <div key={list.id} className="flex flex-col w-5/6 p-4 mb-0">
             <Separator className='gap-0'/>
             <Link to={`/list/${list.slug}`}>
               <Card>
                 <CardHeader>
                   <CardTitle className="my-2 text-md">{list.name}</CardTitle>
-                  <CardDescription className="grid flex-1 gap-4 sm:md:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 justify-between">
-                    <ul className="col-span-1">
-                      <li>Purpose: {list.description}</li>
-                      <li>Agent Role: {list.agent_role.description}</li>
-                    </ul>
-                    <ul className="col-span-1">
-                      <li>List created by <a className="text-rose-700"> @{list.owner.username}</a></li>
-                      <li>On: {list.updated_at}</li>
-                    </ul>
+                  <CardDescription className="flex w-full ">
+                    <div className='w-3/5'>
+                      <ul >
+                        <li>Purpose: {list.description}</li>
+                        <li>Agent Role: {list.agent_role.description}</li>
+                      </ul>
+                    </div>
+                    <div className="flex flex-col w-2/5 items-end">
+                      <ul >
+                        <li>List created by <a className="text-rose-700"> @{list.owner.username}</a></li>
+                        <li>On: {list.updated_at}</li>
+                      </ul>
+                    </div>
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
@@ -53,6 +78,16 @@ const ListGrid = () => {
             </Link>
           </div>
         )}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious onClick={handlePrevious} />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
       </div>
     </>
   )

@@ -19,6 +19,7 @@ const ListDetails: React.FC = () => {
     execute(); // Trigger fetching the list
   }, []); // need to add depency execute in prod server
 
+  console.log(data);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading lists: {error.message}</p>;
 

@@ -37,23 +37,35 @@ interface MyJwtPayload extends JwtPayload {
 }
 
 const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
-  const { execute, data, error, isLoading } = useNotes(listSlug);
-  const notes = (data as Note[]) ?? [];
+  const [pageNumber, setPageNumber] = useState(1);
+  const { execute, data, error, isLoading } = useNotes(listSlug, undefined, 'get', undefined, pageNumber);
+  const notesResponse = (data as Note[]) ?? [];
+  const notes = notesResponse.results;
+
+  
   const token = localStorage.getItem('authTokens');
   const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;
   // Pagination variables
+  const handleNext = () => setPageNumber(prev => prev + 1);
+  const handlePrevious = () => setPageNumber(prev => Math.max(prev - 1, 1));
+  const totalItems = notesResponse.count;
+  const itemsPerPage = 10; // Adjust as needed
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
   // const [displayedNotes, setDisplayedNotes] = useState<Note[]>(notes);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [notesPerPage, setNotesPerPage] = useState(5);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [notesPerPage, setNotesPerPage] = useState(5);
 
-  const lastNoteIndex = currentPage * notesPerPage;
-  const firstNoteIndex = lastNoteIndex - notesPerPage;
-  const currentNotes = notes.slice(firstNoteIndex, lastNoteIndex);
+  // const lastNoteIndex = currentPage * notesPerPage;
+  // const firstNoteIndex = lastNoteIndex - notesPerPage;
+  // const currentNotes = notes.slice(firstNoteIndex, lastNoteIndex);
 
   useEffect(() => {
     execute(); // Trigger fetching the notes list
     reset(); 
-  }, [isCreated]);
+  }, [isCreated, pageNumber]);
+
+  console.log(notes);
+  console.log(pageNumber);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
@@ -71,7 +83,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
       <div className="col-span-3">
         <h3 className="text-lg font-bold mb-6">Notes in this List</h3>
         {noNotesMessage()}
-        {currentNotes && currentNotes.map((note) => 
+        {notes && notes.map((note) => 
           <div key={note.id} className="mb-2">
             <Separator className='gap-0 mb-1'/>
               <Card>
@@ -101,57 +113,71 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
               </Card>
           </div>
         )}
-        <PaginationSection totalNotes={notes.length} notesPerPage={notesPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious onClick={handlePrevious} />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
+              </PaginationItem>
+            </PaginationContent>
+        </Pagination>
       </div>
     </>
   )
 }
 
+
+
 export default NotePreviewList;
 
-function PaginationSection({
-  totalNotes,
-  notesPerPage,
-  currentPage,
-  setCurrentPage,
-}: {totalNotes: any,
-  notesPerPage: any,
-  currentPage: any,
-  setCurrentPage: any,}
-  ) 
-{
 
-  // Rule to define the number of pages dynamically
-  let pages = [];
-  for (let numberOfPages = 1; numberOfPages <= Math.ceil(totalNotes / notesPerPage); numberOfPages++) {
-    pages.push(numberOfPages);
-  }
+//  <PaginationSection totalNotes={notes.length} notesPerPage={notesPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-  const handleNextPage = () => {
-    if (currentPage < pages.length) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+// function PaginationSection({
+//   totalNotes,
+//   notesPerPage,
+//   currentPage,
+//   setCurrentPage,
+// }: {totalNotes: any,
+//   notesPerPage: any,
+//   currentPage: any,
+//   setCurrentPage: any,}
+//   ) 
+// {
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+//   // Rule to define the number of pages dynamically
+//   let pages = [];
+//   for (let numberOfPages = 1; numberOfPages <= Math.ceil(totalNotes / notesPerPage); numberOfPages++) {
+//     pages.push(numberOfPages);
+//   }
 
-  return (
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious onClick={() => handlePrevPage()} />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext onClick={() => handleNextPage()} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    )
+//   const handleNextPage = () => {
+//     if (currentPage < pages.length) {
+//       setCurrentPage(currentPage + 1);
+//     }
+//   };
 
-}
+//   const handlePrevPage = () => {
+//     if (currentPage > 1) {
+//       setCurrentPage(currentPage - 1);
+//     }
+//   };
+
+//   return (
+//       <Pagination>
+//         <PaginationContent>
+//           <PaginationItem>
+//             <PaginationPrevious onClick={() => handlePrevPage()} />
+//           </PaginationItem>
+//           <PaginationItem>
+//             <PaginationNext onClick={() => handleNextPage()} />
+//           </PaginationItem>
+//         </PaginationContent>
+//       </Pagination>
+//     )
+
+// }
 
 

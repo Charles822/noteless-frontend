@@ -30,14 +30,19 @@ export interface Note {
 	slug: string;
 }
 
-const useNotes = (slug?: string, noteSlug?: string, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
+const useNotes = (
+		slug?: string, 
+		noteSlug?: string, 
+		method: 'get' | 'post' | 'patch' = 'get', 
+		requestData?: { youtube_url: string; note_list: number; owner: number },
+		pageNumber?: number = 1) => {
 	const endpoint = method === 'post'
 	? `/notes/notes/add_note/`
 	: noteSlug 
 		? `/notes/notes/${noteSlug}/`
-		: `/lists/lists/${slug}/notes/`;
+		: `/lists/lists/${slug}/notes/?page=${pageNumber}`;
 	
-	return useData<Note | Note[]>(endpoint, method, requestData);
+	return useData<Note | Note[] >(endpoint, method, requestData);
 	}
 
 export default useNotes;
