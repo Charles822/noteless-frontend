@@ -51,20 +51,20 @@ const ListGrid = () => {
       <h1 className="my-2 w-full px-6 text-2xl font-bold">All Lists</h1>
       <div >
         {lists && lists.map((list) => 
-          <div key={list.id} className="flex flex-col w-5/6 p-4 mb-0">
+          <div key={list.id} className="flex flex-col w-full px-4 mb-1 md:w-5/6">
             <Separator className='gap-0'/>
             <Link to={`/list/${list.slug}`}>
               <Card>
                 <CardHeader>
                   <CardTitle className="my-2 text-md">{list.name}</CardTitle>
-                  <CardDescription className="flex w-full ">
-                    <div className='w-3/5'>
+                  <CardDescription className="grid gap-2 sm:grid-cols-1 md:grid-cols-3 ">
+                    <div className='col-span-2 pr-4'>
                       <ul >
                         <li>Purpose: {list.description}</li>
                         <li>Agent Role: {list.agent_role.description}</li>
                       </ul>
                     </div>
-                    <div className="flex flex-col w-2/5 items-end">
+                    <div className="col-span-1 items-end">
                       <ul >
                         <li>List created by <a className="text-rose-700"> @{list.owner.username}</a></li>
                         <li>On: {list.updated_at}</li>
