@@ -25,15 +25,16 @@ const useUsers = (
 	userId?: number,
 	method: 'get' | 'post' | 'patch' = 'get',
 	endpointType: 'deduct' | 'add' | 'list' | 'notes' = 'deduct', 
-	requestData?: any) => {
+	requestData?: any,
+	pageNumber?: number = 1) => {
 	
 	const endpoint = 
 		method === 'post'
 		  ? `/users/users/create_user/`
 		  : endpointType === 'list'
-		  	? `/users/users/${userId}/lists/`
+		  	? `/users/users/${userId}/lists/?page=${pageNumber}`
 			  	: endpointType === 'notes'
-			  	? `/users/users/${userId}/notes/`
+			  	? `/users/users/${userId}/notes/?page=${pageNumber}`
 		  		: endpointType === 'deduct'
 				  	? `/users/profiles/deduct_credit/`
 				  	: `/users/profiles/add_credit/`;

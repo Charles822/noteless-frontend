@@ -4,13 +4,14 @@ import logo from '../assets/notelesslogo.png';
 
 const Logo = () => {
 	return (
-		<div className='flex col-2'>
-			<Button
-				  variant="ghost"
-			      size="icon"
-			      className="overflow-hidden rounded-full mx-4 my-4 mr-1"
-			      >
-			        <Link to="/">
+		<div >
+			<Link to="/" className='flex'>
+				<Button
+					  variant="ghost"
+				      size="icon"
+				      className="overflow-hidden rounded-full mx-4 my-4 mr-1"
+				      >
+				        
 			          <img
 			            src={logo}
 			            width={28}
@@ -18,9 +19,10 @@ const Logo = () => {
 			            alt="Noteless Logo"
 			            className="overflow-hidden rounded-full"
 			          />
-			        </Link>
-		    </Button>
-		    <p className='content-center text-lg font-semibold'>Noteless</p>
+				        
+			    </Button>
+			    <p className='content-center text-lg font-semibold'>Noteless</p>
+		    </Link>
 	    </div>
 	)
 }

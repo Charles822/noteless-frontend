@@ -1,7 +1,8 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import React, { useContext } from "react";
 import {
   Settings,
+  Send,
   CirclePlus,
   GalleryVerticalEnd,
   Folder 
@@ -85,14 +86,14 @@ function Sidenav() {
           <Tooltip>
             <TooltipTrigger asChild>
               <a
-                href="#"
+                href="mailto:charles@voxelai.ai?subject=About%20Noteless"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
+                <Send className="h-5 w-5" />
+                <span className="sr-only">Support</span>
               </a>
             </TooltipTrigger>
-            <TooltipContent side="right">Settings</TooltipContent>
+            <TooltipContent side="right">Ask me anything!</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </nav>

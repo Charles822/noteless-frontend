@@ -100,7 +100,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
                         <li>Published date: {note.video.published_at}</li>
                       </ul>
                       <ul>
-                        <li>Note created by {note.owner.username}</li>
+                        <li><a>Note created by</a><a className='text-rose-700'> @{note.owner.username}</a></li>
                         <li>On: {note.created_at}</li>
                       </ul>
                     </CardDescription>
@@ -127,8 +127,6 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
     </>
   )
 }
-
-
 
 export default NotePreviewList;
 

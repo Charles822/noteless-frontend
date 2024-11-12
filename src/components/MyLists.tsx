@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Card,
@@ -7,6 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import useUsers from "../hooks/useUsers"; 
 import { List }from "../hooks/useLists"; 
@@ -17,12 +26,21 @@ interface Props {
 }
 
 const MyLists = ({ user_id }: Props) => {
-  const { execute, data, error, isLoading } = useUsers(user_id, 'get', 'list');
-  const lists = (data as List[]) ?? [];
+  const [pageNumber, setPageNumber] = useState(1);
+  const { execute, data, error, isLoading } = useUsers(user_id, 'get', 'list', undefined, pageNumber);
+  const listsResponse = (data as List[]) ?? [];
+  const lists = listsResponse.results;
+
+  // Pagination variables
+  const handleNext = () => setPageNumber(prev => prev + 1);
+  const handlePrevious = () => setPageNumber(prev => Math.max(prev - 1, 1));
+  const totalItems = listsResponse.count;
+  const itemsPerPage = 10; // Adjust as needed
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
     execute(); // Trigger fetching lists
-  }, []); // need to add depency execute in prod server
+  }, [pageNumber]); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading your lists: {error.message}</p>;
@@ -59,6 +77,16 @@ const MyLists = ({ user_id }: Props) => {
               </Link>
             </div>
           )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious onClick={handlePrevious} />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
         </div>
       </div>
     </>

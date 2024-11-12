@@ -23,7 +23,7 @@ const Header: React.FC = () => {
 				{ user ? (
 					<>
 						<Link to="/checkout">
-							<Button className='bg-transparent border border-rose-500 font-normal text-rose-700 hover:text-white h-6 p-1 '>Buy Credits</Button>
+							<Button className='hidden 390:flex bg-transparent border border-rose-500 font-normal text-sm text-rose-700 hover:text-white h-6 p-1 '>Get Credits</Button>
 						</Link>
 						<CreditCount />
 						<ProfileButton />

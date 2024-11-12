@@ -45,7 +45,7 @@ type TaskResponse = {
 };
 
 function NoteForm({ className, listId, onNoteCreated }: Props) {
-  const [delay, setDelay] = useState<number | null>(5000);
+  const [delay, setDelay] = useState<number | null>(10000);
   const [taskIds, setTaskIds] = useState<string[]>([]);
   const { profile, refetchProfile } = useProfileContext(); // Using profile context to get userId and credit count
 

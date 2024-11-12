@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import useLists from '../hooks/useLists';
@@ -111,8 +112,8 @@ function ListForm() {
 
   return (
   	<>
-	  	<h1 className="my-2 px-6 text-2xl font-bold">Create a new List</h1>
-	  	<div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-2 xl:grid-cols-2">
+	  	<h1 className="my-2 pl-6 text-2xl font-bold">Create a new List</h1>
+	  	<div className="flex flex-col px-6 w-full md:w-4/6">
 		    <Form {...form} >
 		      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 		        <FormField
@@ -154,7 +155,7 @@ function ListForm() {
 		            <FormItem>
 		              <FormLabel>AI agent Role</FormLabel>
 		              <FormControl>
-		                <Input placeholder="Ex: Your an experienced game developer and entrepreneur..." {...field} />
+		                <Textarea placeholder="Ex: Your an experienced game developer and entrepreneur..." {...field} />
 		              </FormControl>
 		              <FormDescription>
 		                Give your AI agent the right role and expected output. 

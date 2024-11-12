@@ -38,15 +38,15 @@ const ProductDisplay = ({ token }) => {
     <>
       <div className='flex flex-row items-center justify-between mb-4'>
         <Logo />
-        {!token ? <div className='flex gap-1 items-center'><p className='text-stone-500'>New to Noteless? Sign up now</p><Link to='/signup'><Button className="mx-2" >Get free credits</Button></Link></div> : null}
+        {!token ? <div className='flex gap-1 items-center'><p className='hidden 530:flex text-stone-500'>New to Noteless? Sign up now</p><Link to='/signup'><Button className="mx-2" >Get free credits</Button></Link></div> : null}
       </div>
       <div className='flex flex-col gap-2 items-center'>
-        <h1 className='text-3xl flex flex-col items-center my-2'>
+        <h1 className='text-2xl md:text-3xl flex flex-col items-center text-center my-2'>
           <a>Start extracting content from hundreds of <a className="underline decoration-rose-700">hours of Youtube videos</a>.
           </a>
         </h1>
-        <h2 className='text-2xl'>Launch Price Offers - Save up to <a className='text-rose-700'>60%</a></h2>
-        <p className='text-stone-500'>No unnecessary subscription plan. All our packages are one off purchases.</p>
+        <h2 className='text-xl md:text-2xl text-center'>Launch Price Offers - Save up to <a className='text-rose-700'>60%</a></h2>
+        <p className='text-stone-500 text-center'>No unnecessary subscription plan. All our packages are one off purchases.</p>
       </div>
       <div className="grid gap-2 sm:px-6 sm:py-0 md:grid-cols-3" >
         <Card className="mx-auto my-10 max-w-sm hover:bg-white shadow outline outline-gray-100">

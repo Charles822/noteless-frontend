@@ -31,10 +31,10 @@ const registerUserSchema = z.object({
     message: "Email must be valid.",
   }),
   username: z.string().min(7, {
-    message: "Your list description must be at least 10 characters.",
+    message: "Your username must have at least 7 characters.",
   }),
   password: z.string().min(8,  {
-    message: "Your list description must be at least 10 characters.",
+    message: "Your password must be at least 10 characters long and contain an upper case, a lower case, a special character and a number.",
   }),
   confirmPassword: z.string(),
 })
@@ -236,7 +236,7 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />  
-              <Button disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
+              <Button disabled={isSubmitting}>Submit</Button>
               <Toaster />
             </form>
           </Form>

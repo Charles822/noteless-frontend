@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import {
   Card,
@@ -7,6 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import { UrlLink } from '../utils/Formatting';
 import useUsers from "../hooks/useUsers";
@@ -19,12 +28,21 @@ interface Props {
 }
 
 const MyNotes= ({ user_id }: Props) => {
-  const { execute, data, error, isLoading } = useUsers(user_id, 'get', 'notes');
-  const notes = (data as Note[]) ?? [];
+  const [pageNumber, setPageNumber] = useState(1);
+  const { execute, data, error, isLoading } = useUsers(user_id, 'get', 'notes', undefined, pageNumber);
+  const notesResponse = (data as Note[]) ?? [];
+  const notes = notesResponse.results;
+
+    // Pagination variables
+  const handleNext = () => setPageNumber(prev => prev + 1);
+  const handlePrevious = () => setPageNumber(prev => Math.max(prev - 1, 1));
+  const totalItems = notesResponse.count;
+  const itemsPerPage = 10; // Adjust as needed
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
     execute(); // Trigger fetching the notes list
-  }, []);
+  }, [pageNumber]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading  your notes: {error.message}</p>;
@@ -66,6 +84,16 @@ const MyNotes= ({ user_id }: Props) => {
               </Card>
           </div>
         )}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious onClick={handlePrevious} />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
       </div>
     </>
   )
