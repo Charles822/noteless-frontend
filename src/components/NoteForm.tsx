@@ -127,7 +127,7 @@ function NoteForm({ className, listId, onNoteCreated }: Props) {
       deduct_credit(credit_data); // deduct points right away to prevent users to pass new note requests without having points (set up refund logic in case of failure)
       setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
       
-      toast({ variant: "loading", description: "Your note is processing!" });
+      toast({ variant: "loading", description: "Your note is processing! You have spent 1 credit." });
       reset();
 
     } catch (err) {

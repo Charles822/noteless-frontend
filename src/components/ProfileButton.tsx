@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from "../context/AuthContext";
 import { User }from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -48,8 +48,11 @@ const ProfileButton = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to='mailto:charles@voxelai.ai?subject=About%20Noteless'> 
+              Support
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleClick}>Logout</DropdownMenuItem>
           </DropdownMenuContent>

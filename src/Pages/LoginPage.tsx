@@ -32,7 +32,8 @@ export function LoginPage() {
   };
 
   if (redirect) {
-    return <Navigate to="/" replace />;
+    window.location.href = "/";
+    return null;
   }
 
   return (
