@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Button } from "@/components/ui/button"
@@ -9,8 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Toaster } from "@/components/ui/toaster";
-import { useToast } from "@/components/ui/use-toast";
 import { Layers, CircleCheckBig } from 'lucide-react';
 import QueryString from 'query-string';
 import { baseURL } from "../services/api-client";
@@ -24,15 +22,11 @@ interface MyJwtPayload extends JwtPayload {
 }
 
 
-const ProductDisplay = ({ token }) => {
-  const { toast } = useToast();
+interface ProductDisplayProps {
+  token: string | null;
+}
 
-  const handleClick = (event) => {
-    if (!token) {
-      event.preventDefault();
-      toast({ variant: "destructive", description: 'Please log in to purchase.' });
-    }
-  };
+const ProductDisplay = ({ token }: ProductDisplayProps) => {
 
   return (
     <>
@@ -63,9 +57,16 @@ const ProductDisplay = ({ token }) => {
               <p className='text-rose-700'>One-off purchase</p>
             </CardDescription>
             <form action={`${baseURL}/api/stripe/create-checkout-session-pack1`} method="POST">
-              <Button type="submit" onClick={handleClick}>
-                Buy now
-              </Button>
+              { token ?
+                <Button type="submit" >
+                  Buy now
+                </Button> : 
+                <>
+                  <Link to='/login'>
+                    <Button>Login to buy</Button>
+                  </Link>
+                </>
+              }
             </form>
           </CardContent>
         </Card>
@@ -83,9 +84,16 @@ const ProductDisplay = ({ token }) => {
               <p className='text-rose-700'>One-off purchase</p>
             </CardDescription>
             <form action={`${baseURL}/api/stripe/create-checkout-session-pack2`} method="POST">
-              <Button type="submit" onClick={handleClick}>
-                Buy now
-              </Button>
+              { token ?
+                <Button type="submit" >
+                  Buy now
+                </Button> : 
+                <>
+                  <Link to='/login'>
+                    <Button>Login to buy</Button>
+                  </Link>
+                </>
+              }
             </form>
           </CardContent>
         </Card>
@@ -103,19 +111,30 @@ const ProductDisplay = ({ token }) => {
               <p className='text-rose-700'>One-off purchase</p>
             </CardDescription>
             <form action={`${baseURL}/api/stripe/create-checkout-session-pack3`} method="POST">
-              <Button type="submit" onClick={handleClick}>
-                Buy now
-              </Button>
+              { token ?
+                <Button type="submit" >
+                  Buy now
+                </Button> : 
+                <>
+                  <Link to='/login'>
+                    <Button>Login to buy</Button>
+                  </Link>
+                </>
+              }
             </form>
           </CardContent>
         </Card>
-        <Toaster />
       </div>
     </>
   );
 };
 
-const Message = ({ message }) => {
+
+interface MessageProps {
+  message: string;
+}
+
+const Message = ({ message }: MessageProps) => {
   const navigate = useNavigate();
 
     useEffect(() => {
@@ -134,7 +153,7 @@ const Message = ({ message }) => {
             <CircleCheckBig className='text-green-500' />
             <p>{message}</p>
           </div>
-          <p className='text-stone-700 text-sm'>If you are not being redirected, click <a onClick={navigate('/', { replace: true })} className='text-rose-500 underline'>here</a>.</p>
+          <p className='text-stone-700 text-sm'>If you are not being redirected, click <a onClick={() => navigate('/', { replace: true })} className='text-rose-500 underline'>here</a>.</p>
         </div>
       </>
   );

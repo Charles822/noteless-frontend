@@ -21,12 +21,26 @@ export interface ProfileResponse {
 
 }
 
+export interface MyNotesResponse {
+	count: number;
+	next: string;
+	previous: string;
+	results: Note[];
+}
+
+export interface MyListsResponse {
+  count: number;
+  next: string;
+  previous: string;
+  results: List[];
+}
+
 const useUsers = (
 	userId?: number,
 	method: 'get' | 'post' | 'patch' = 'get',
 	endpointType: 'deduct' | 'add' | 'list' | 'notes' = 'deduct', 
 	requestData?: any,
-	pageNumber?: number = 1) => {
+	pageNumber?: number) => {
 	
 	const endpoint = 
 		method === 'post'
@@ -39,7 +53,7 @@ const useUsers = (
 				  	? `/users/profiles/deduct_credit/`
 				  	: `/users/profiles/add_credit/`;
 
-	return useData<User | ProfileResponse | List[] | Note[]>(endpoint, method, requestData);
+	return useData<User | ProfileResponse | List[] | Note[] | MyNotesResponse | MyListsResponse>(endpoint, method, requestData);
 	}
 
 export default useUsers;

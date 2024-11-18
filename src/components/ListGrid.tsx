@@ -10,20 +10,18 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import useLists from "../hooks/useLists"; 
-import { List }from "../hooks/useLists"; 
+import { ListsResponse }from "../hooks/useLists"; 
 
 const ListGrid = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const { execute, data, error, isLoading } = useLists(undefined, 'get', undefined, pageNumber);
-  const listsResponse = (data as List[]) ?? [];
+  const listsResponse = (data as ListsResponse) ?? {};
   const lists = listsResponse.results;
 
   console.log(lists);
@@ -84,7 +82,7 @@ const ListGrid = () => {
                 <PaginationPrevious onClick={handlePrevious} />
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} />
+                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : () => {}} />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

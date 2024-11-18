@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import CreditCount from './CreditCount';
 import Logo from './Logo';
 import ProfileButton from "./ProfileButton";
-import SearchHeader from "./SearchHeader";
 
 const Header: React.FC = () => {
 	//check to ensure the context is not undefined before accessing its properties

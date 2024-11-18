@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator";
 import useNotes from "../hooks/useNotes";
+import { Note } from "../hooks/useNotes";
 import { UrlLink, TextWithLineBreaks } from '../utils/Formatting';
 import Vote from './Vote';
 import CommentsPreview from './CommentsPreview';
@@ -25,7 +26,8 @@ interface MyJwtPayload extends JwtPayload {
 
 const NoteDetailsCard = () => {
   const params = useParams<{noteSlug: string}>();
-  const { execute, data: note, error, isLoading } = useNotes(undefined, params.noteSlug);
+  const { execute, data, error, isLoading } = useNotes(undefined, params.noteSlug);
+  const note = data as Note;
   const [isSubmitted, setStatus] = useState(false);
   const token = localStorage.getItem('authTokens');
   const userId = token ? (jwtDecode<MyJwtPayload>(token)).user_id : null;

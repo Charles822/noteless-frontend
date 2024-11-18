@@ -10,15 +10,13 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import useUsers from "../hooks/useUsers"; 
-import { List }from "../hooks/useLists"; 
+import { MyListsResponse }from "../hooks/useUsers"; 
 // Tells typescript that my payload include a user_id property 
 
 interface Props {
@@ -28,8 +26,8 @@ interface Props {
 const MyLists = ({ user_id }: Props) => {
   const [pageNumber, setPageNumber] = useState(1);
   const { execute, data, error, isLoading } = useUsers(user_id, 'get', 'list', undefined, pageNumber);
-  const listsResponse = (data as List[]) ?? [];
-  const lists = listsResponse.results;
+  const listsResponse = data as MyListsResponse ?? {};
+  const lists = listsResponse.results
 
   // Pagination variables
   const handleNext = () => setPageNumber(prev => prev + 1);
@@ -83,7 +81,7 @@ const MyLists = ({ user_id }: Props) => {
                   <PaginationPrevious onClick={handlePrevious} />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
+                  <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : () => {}} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

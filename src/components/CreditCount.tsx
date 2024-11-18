@@ -1,17 +1,9 @@
-import React, { useEffect, useContext } from "react";
-import AuthContext from '../context/AuthContext';
 import { Link } from "react-router-dom";
 import { Layers } from 'lucide-react';
 import { useProfileContext } from '../context/CreditContext';
 
 const CreditCount: React.FC = () => {
-	const { profile, refetchProfile } = useProfileContext();
-	// const authContext = useContext(AuthContext);
-
-// 	useEffect(() => {
-  //   // This effect runs whenever the component mounts to refresh the count when a user login
-  //   refetchProfile();
-  // }, []);
+	const { profile } = useProfileContext();
 
 	return (
 		<>

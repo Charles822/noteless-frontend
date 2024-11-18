@@ -11,18 +11,15 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import { UrlLink } from '../utils/Formatting';
 import useNotes from "../hooks/useNotes";
-import { Note } from "../hooks/useNotes";
+import { NotesResponse } from "../hooks/useNotes";
 import CommentsPreview from './CommentsPreview';
-import ClientPagination from './ClientPagination';
 import Vote from './Vote';
 
 interface Props {
@@ -39,7 +36,7 @@ interface MyJwtPayload extends JwtPayload {
 const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
   const [pageNumber, setPageNumber] = useState(1);
   const { execute, data, error, isLoading } = useNotes(listSlug, undefined, 'get', undefined, pageNumber);
-  const notesResponse = (data as Note[]) ?? [];
+  const notesResponse = (data as NotesResponse) ?? {};
   const notes = notesResponse.results;
 
   
@@ -119,7 +116,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
                 <PaginationPrevious onClick={handlePrevious} />
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
+                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : () => {}} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
               </PaginationItem>
             </PaginationContent>
         </Pagination>

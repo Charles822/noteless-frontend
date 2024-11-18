@@ -10,16 +10,14 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Separator } from "@/components/ui/separator";
 import { UrlLink } from '../utils/Formatting';
 import useUsers from "../hooks/useUsers";
-import { Note } from "../hooks/useNotes";
+import { MyNotesResponse} from "../hooks/useUsers";
 import CommentsPreview from './CommentsPreview';
 import Vote from './Vote';
 
@@ -30,8 +28,8 @@ interface Props {
 const MyNotes= ({ user_id }: Props) => {
   const [pageNumber, setPageNumber] = useState(1);
   const { execute, data, error, isLoading } = useUsers(user_id, 'get', 'notes', undefined, pageNumber);
-  const notesResponse = (data as Note[]) ?? [];
-  const notes = notesResponse.results;
+  const notesResponse = data as MyNotesResponse ?? {};
+  const notes = notesResponse.results
 
     // Pagination variables
   const handleNext = () => setPageNumber(prev => prev + 1);
@@ -90,7 +88,7 @@ const MyNotes= ({ user_id }: Props) => {
                 <PaginationPrevious onClick={handlePrevious} />
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : null} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
+                <PaginationNext onClick={(pageNumber < totalPages) ? handleNext : () => {}} className={(pageNumber >= totalPages) ? 'text-rose-700' : ''} />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

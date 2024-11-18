@@ -23,18 +23,26 @@ export interface List {
   meta_description: string;
 }
 
+export interface ListsResponse {
+  count: number;
+  next: string;
+  previous: string;
+  results: List[];
+}
+
+
 const useLists = (
     slug?: string, 
     method: 'get' | 'post' | 'patch' = 'get', 
     requestData?: { name: string; description: string; agent_role_description: string; owner: number },
-    pageNumber?: number = 1) => {
+    pageNumber?: number) => {
   const endpoint = method === 'post'
     ? '/lists/lists/add_list/'
     : slug 
       ? `/lists/lists/${slug}/`
       : `/lists/lists/?page=${pageNumber}`;
 
-  return useData<List | List[] >(endpoint, method, requestData);
+  return useData<List | List[] | ListsResponse>(endpoint, method, requestData);
 }
 
 export default useLists;

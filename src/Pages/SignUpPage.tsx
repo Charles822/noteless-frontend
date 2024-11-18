@@ -129,7 +129,7 @@ export default function SignUpPage() {
 
   const { control, handleSubmit, formState, reset } = form;
   const [redirect, setRedirect] = useState(false);
-  const { isSubmitting, isDirty, isValid } = formState;
+  const { isSubmitting } = formState;
   const { toast } = useToast();
 
   // Call useUsers at the top level
