@@ -178,9 +178,9 @@ export default function Checkout() {
 
     if (values.success && product_id) {
       const credit =
-        product_id === 'prod_R5rTPmubeChRMz' ? 50 
-        : product_id === 'prod_R6dDRuy9ZZcwCe' ? 100
-        : product_id === 'prod_R6xnZCLfbtRFcg' ? 500
+        product_id === 'prod_REsI3HMi7BbLix' ? 50 
+        : product_id === 'prod_REsISHJPejJWjF' ? 100
+        : product_id === 'prod_REsIAxThFGqYYq' ? 500
         : 0; // Default to 0 if no match
       
       if (credit > 0) {
